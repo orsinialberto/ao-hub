@@ -35,7 +35,12 @@ function showScene(index) {
   shown = index;
   const current = scenes[index];
   dots.forEach((d, i) => (i === index ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
-  doors.forEach((a) => (a.dataset.scene === current.key ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+  // in alto resta solo la porta del momento mostrato
+  doors.forEach((a) => {
+    a.hidden = a.dataset.scene !== current.key;
+    if (a.hidden) a.removeAttribute('aria-current');
+    else a.setAttribute('aria-current', 'true');
+  });
 }
 
 function setControls(visible) {
@@ -51,7 +56,11 @@ function showPoster() {
   poster.hidden = false;
   setControls(false);
   showScene(0);
-  doors.forEach((a) => a.removeAttribute('aria-current'));
+  // senza scena non si può girare: tornano tutte le porte
+  doors.forEach((a) => {
+    a.hidden = false;
+    a.removeAttribute('aria-current');
+  });
 }
 
 function startScene() {

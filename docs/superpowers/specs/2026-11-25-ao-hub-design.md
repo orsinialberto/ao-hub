@@ -70,7 +70,7 @@ Comportamento:
 - La rotazione si ferma sempre su uno dei tre momenti **(proposta)**.
 - Il prato ruota e la figura cambia durante il movimento, con l'erba davanti che aiuta a coprire il passaggio **(proposta)**. Non è un giro intorno alla persona: sono tre immagini diverse.
 - Si entra con i bottoni in alto o cliccando la figura. La scritta sotto il prato è stata tolta su richiesta di Alberto dopo la prima prova (nello schema qui sopra non va considerata). Un trascinamento non deve contare come clic **(proposta)**.
-- Il bottone del momento visibile è evidenziato **(proposta)**.
+- In alto si vede **solo il bottone del momento mostrato** (richiesta di Alberto dopo la prima prova). Senza grafica 3D o JavaScript si vedono tutti e tre.
 - I link si aprono nella stessa scheda **(proposta)**.
 - Sotto il nome può stare una riga che dice chi è; il testo è da scrivere **(proposta)**.
 

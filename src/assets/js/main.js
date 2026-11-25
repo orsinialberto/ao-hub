@@ -6,7 +6,7 @@ import { FIGURES } from './figures.js';
 import { DRAG_THRESHOLD, isClick, hitRect, bladeCountFor } from './ui-state.js';
 
 const $ = (id) => document.getElementById(id);
-const canvas = $('meadow'), poster = $('poster'), enter = $('enter'), prev = $('prev'), next = $('next');
+const canvas = $('meadow'), poster = $('poster'), prev = $('prev'), next = $('next');
 const dots = [...$('dots').querySelectorAll('button')];
 const doors = [...$('doors').querySelectorAll('a')];
 const scenes = JSON.parse($('scenes').textContent);
@@ -33,8 +33,6 @@ let onScreen = true;
 function showScene(index) {
   shown = index;
   const current = scenes[index];
-  enter.textContent = current.caption;
-  enter.href = current.href;
   dots.forEach((d, i) => (i === index ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
   doors.forEach((a) => (a.dataset.scene === current.key ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
 }
@@ -53,7 +51,6 @@ function showPoster() {
   setControls(false);
   showScene(0);
   doors.forEach((a) => a.removeAttribute('aria-current'));
-  enter.hidden = false;
 }
 
 function startScene() {
@@ -71,7 +68,6 @@ function startScene() {
   wake = createWake();
   poster.hidden = true;
   setControls(true);
-  enter.hidden = false;
   showScene(activeIndex(rotation));
   draw(performance.now(), 0);
   scene.preload();

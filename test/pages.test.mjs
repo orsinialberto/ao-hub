@@ -31,11 +31,15 @@ test('scene data for the script follows scene order and starts hidden', () => {
     const data = JSON.parse(p.html.match(/<script type="application\/json" id="scenes">([\s\S]*?)<\/script>/)[1]);
     assert.deepEqual(data.map((s) => s.key), SCENES);
     for (const s of data) assert.equal(s.href, links(p.lang)[s.key]);
-    for (const id of ['prev', 'next', 'dots', 'enter']) assert.match(p.html, new RegExp(`id="${id}"[^>]*\\shidden`));
+    for (const id of ['prev', 'next', 'dots']) assert.match(p.html, new RegExp(`id="${id}"[^>]*\\shidden`));
   }
 });
 
 test('404 is bilingual', () => {
   assert.match(pages[2].html, /Page not found/);
   assert.match(pages[2].html, /Pagina non trovata/);
+});
+
+test('the only visible doors are the buttons on top', () => {
+  for (const p of pages.slice(0, 2)) assert.doesNotMatch(p.html, /id="enter"/);
 });

@@ -49,7 +49,6 @@ ${DOOR_ORDER.map((k) => `<a data-scene="${k}" href="${url[k]}">${esc(t.doors[k])
 <button id="next" class="arrow" type="button" aria-label="${esc(t.next)}" hidden>→</button>
 </main>
 <footer class="controls">
-<a id="enter" href="${url.gallery}" hidden>${esc(t.captions.gallery)}</a>
 <div id="dots" hidden>
 ${SCENES.map((k, i) => `<button type="button" data-index="${i}" aria-label="${esc(t.dots[k])}"></button>`).join('\n')}
 </div>

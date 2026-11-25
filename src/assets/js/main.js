@@ -2,6 +2,7 @@
 import { createScene } from './renderer.js';
 import { createRotation, dragStart, dragBy, release, goTo, step, tick, activeIndex, figureVisibility } from './rotation.js';
 import { createWake } from './wake.js';
+import { createWheelStepper } from './wheel.js';
 import { FIGURES } from './figures.js';
 import { DRAG_THRESHOLD, isClick, hitRect, bladeCountFor } from './ui-state.js';
 
@@ -199,6 +200,21 @@ addEventListener('keydown', (e) => {
   else return;
   e.preventDefault();
 });
+
+const wheel = createWheelStepper();
+addEventListener('wheel', (e) => {
+  if (!scene || e.ctrlKey) return; // ctrl + rotella è lo zoom
+  const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  // su finestre basse la pagina deve poter scorrere: la scena gira solo quando è arrivata in fondo
+  const page = document.documentElement;
+  const canScroll = delta > 0 ? scrollY + innerHeight < page.scrollHeight - 1 : scrollY > 0;
+  if (canScroll && delta === e.deltaY) return;
+  e.preventDefault();
+  if (drag) return;
+  const pixels = delta * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1);
+  const direction = wheel.push(pixels, e.timeStamp);
+  if (direction) step(rotation, direction);
+}, { passive: false });
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { abandon(); stop(); } else run();

@@ -16,7 +16,7 @@ Il server di anteprima risponde anche agli altri dispositivi della rete (utile p
 ## Dove stanno le cose
 
 - `src/data.mjs` testi e indirizzi · `src/pages.mjs` HTML · `src/assets/style.css`
-- `src/assets/js/`: `main.js` interazione, `renderer.js` e `shaders.js` WebGL2, `meadow.js` semina e colori, `rotation.js`, `wake.js` scia del cursore, `ui-state.js` inquadratura e clic, `figures.js` misure delle figure
+- `src/assets/js/`: `main.js` interazione, `wheel.js` rotella e trackpad, `renderer.js` e `shaders.js` WebGL2, `meadow.js` semina e colori, `rotation.js`, `wake.js` scia del cursore, `ui-state.js` inquadratura e clic, `figures.js` misure delle figure
 - `public/` figure, immagine ferma, anteprima social, font
 
 ## Cambiare una figura

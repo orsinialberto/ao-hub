@@ -16,13 +16,13 @@ ${TRIAL ? '<meta name="robots" content="noindex">\n' : ''}<link rel="canonical" 
 <meta property="og:description" content="${t.description.replace(/"/g, '&quot;')}">
 <meta property="og:url" content="${SITE_URL}${path}">
 <meta property="og:image" content="${SITE_URL}/og.png">
-<meta name="theme-color" content="#faf8f2">`;
+<meta name="theme-color" content="#e3edf4">`;
 
 function home(lang, path) {
   const t = copy[lang];
   const rel = lang === 'en' ? '../' : '';
   const url = links(lang);
-  const scenes = SCENES.map((key) => ({ key, href: url[key], caption: t.captions[key], dotLabel: t.dots[key] }));
+  const scenes = SCENES.map((key) => ({ key, href: url[key], caption: t.captions[key], name: t.doors[key] }));
   const langLink = (code, href) => `<a href="${href}" hreflang="${code}" lang="${code}"${code === lang ? ' aria-current="page"' : ''}>${code.toUpperCase()}</a>`;
   return `<!doctype html>
 <html lang="${lang}">
@@ -45,12 +45,14 @@ ${DOOR_ORDER.map((k) => `<a data-scene="${k}" href="${url[k]}">${esc(t.doors[k])
 <main class="stage">
 <canvas id="meadow" tabindex="0" role="group" aria-label="${esc(t.sceneLabel)}" hidden></canvas>
 <img id="poster" src="${rel}img/poster.webp" width="1200" height="600" alt="${esc(t.posterAlt)}">
-<button id="prev" class="arrow" type="button" aria-label="${esc(t.prev)}" hidden>←</button>
-<button id="next" class="arrow" type="button" aria-label="${esc(t.next)}" hidden>→</button>
 </main>
 <footer class="controls">
-<div id="dots" hidden>
-${SCENES.map((k, i) => `<button type="button" data-index="${i}" aria-label="${esc(t.dots[k])}"></button>`).join('\n')}
+<div id="turner" hidden>
+<div id="track" role="slider" tabindex="0" aria-label="${esc(t.trackLabel)}" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1" aria-valuetext="${esc(t.doors.gallery)}"><span id="thumb"></span></div>
+<div class="turn-row">
+<span class="hint" aria-hidden="true">${esc(t.hint)}</span>
+<span class="arrows"><button id="prev" class="arrow" type="button" aria-label="${esc(t.prev)}">←</button><button id="next" class="arrow" type="button" aria-label="${esc(t.next)}">→</button></span>
+</div>
 </div>
 <p id="announce" class="sr-only" aria-live="polite"></p>
 </footer>

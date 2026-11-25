@@ -66,7 +66,8 @@ L'ordine dei momenti è una proposta.
 
 Comportamento:
 
-- Si gira trascinando, oppure con la rotella del mouse o il trackpad (richiesta di Alberto dopo la prima prova): un gesto, una scena; giù = avanti, su = indietro. Ci sono anche frecce e tre pallini **(proposta)**.
+- Si gira trascinando, oppure con la rotella del mouse o il trackpad (richiesta di Alberto dopo la prima prova): un gesto, una scena; giù = avanti, su = indietro. Sotto il prato (richiesta di Alberto, sul modello del riferimento): una linea continua con un cursore che si può trascinare, la scritta «Trascina per girare» e due frecce; sostituiscono frecce laterali e pallini.
+- Lo sfondo sfuma da un azzurro molto chiaro in alto al colore carta (richiesta di Alberto).
 - La rotazione si ferma sempre su uno dei tre momenti **(proposta)**.
 - Il prato ruota e la figura cambia durante il movimento, con l'erba davanti che aiuta a coprire il passaggio **(proposta)**. Non è un giro intorno alla persona: sono tre immagini diverse.
 - Si entra con i bottoni in alto o cliccando la figura. La scritta sotto il prato è stata tolta su richiesta di Alberto dopo la prima prova (nello schema qui sopra non va considerata). Un trascinamento non deve contare come clic **(proposta)**.

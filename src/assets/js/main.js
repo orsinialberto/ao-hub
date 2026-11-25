@@ -1,6 +1,6 @@
 // Collega pagina, rotazione, scia e scena. Senza di lui restano i link in HTML.
 import { createScene } from './renderer.js';
-import { createRotation, dragStart, dragBy, release, goTo, step, tick, activeIndex, figureVisibility } from './rotation.js';
+import { createRotation, dragStart, dragBy, release, goTo, step, tick, activeIndex, figureVisibility, trackFraction, scrubStart, scrubTo, scrubEnd } from './rotation.js';
 import { createWake } from './wake.js';
 import { createWheelStepper } from './wheel.js';
 import { FIGURES } from './figures.js';
@@ -8,7 +8,7 @@ import { DRAG_THRESHOLD, isClick, hitRect, bladeCountFor } from './ui-state.js';
 
 const $ = (id) => document.getElementById(id);
 const canvas = $('meadow'), poster = $('poster'), prev = $('prev'), next = $('next');
-const dots = [...$('dots').querySelectorAll('button')];
+const track = $('track');
 const doors = [...$('doors').querySelectorAll('a')];
 const scenes = JSON.parse($('scenes').textContent);
 const base = document.body.dataset.base;
@@ -34,7 +34,8 @@ let onScreen = true;
 function showScene(index) {
   shown = index;
   const current = scenes[index];
-  dots.forEach((d, i) => (i === index ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
+  track.setAttribute('aria-valuenow', index + 1);
+  track.setAttribute('aria-valuetext', current.name);
   // in alto resta solo la porta del momento mostrato
   doors.forEach((a) => {
     a.hidden = a.dataset.scene !== current.key;
@@ -44,7 +45,7 @@ function showScene(index) {
 }
 
 function setControls(visible) {
-  for (const el of [prev, next, $('dots')]) el.hidden = !visible;
+  $('turner').hidden = !visible;
 }
 
 /** Ripiego: immagine ferma e link. */
@@ -96,6 +97,7 @@ function draw(ms, dt) {
     announced = index;
     $('announce').textContent = scenes[index].caption;
   }
+  track.style.setProperty('--x', `${(trackFraction(rotation.pos) * 96).toFixed(2)}%`);
   scene.render({
     yaw: 0.35 + (rotation.pos * Math.PI * 2) / 3,
     time: calm.matches ? 0 : ms / 1000,
@@ -189,6 +191,7 @@ canvas.addEventListener('pointerup', (e) => {
 
 function abandon() {
   pointer = null;
+  endScrub();
   endDrag(0);
   canvas.style.cursor = '';
 }
@@ -199,12 +202,34 @@ addEventListener('blur', abandon);
 
 prev.addEventListener('click', () => step(rotation, -1));
 next.addEventListener('click', () => step(rotation, 1));
-dots.forEach((d, i) => d.addEventListener('click', () => goTo(rotation, i)));
+
+// la linea: premere o trascinare porta al punto corrispondente
+let scrubbing = false;
+const fractionAt = (e) => {
+  const box = track.getBoundingClientRect();
+  return (e.clientX - box.left) / box.width;
+};
+function endScrub() {
+  if (!scrubbing) return;
+  scrubbing = false;
+  scrubEnd(rotation);
+}
+track.addEventListener('pointerdown', (e) => {
+  if (!scene || !e.isPrimary || e.button !== 0) return;
+  track.setPointerCapture(e.pointerId);
+  scrubbing = true;
+  scrubStart(rotation);
+  scrubTo(rotation, fractionAt(e));
+});
+track.addEventListener('pointermove', (e) => { if (scrubbing) scrubTo(rotation, fractionAt(e)); });
+for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) track.addEventListener(type, endScrub);
 addEventListener('keydown', (e) => {
-  const inScene = [canvas, prev, next, ...dots].includes(document.activeElement);
+  const inScene = [canvas, prev, next, track].includes(document.activeElement);
   if (!scene || !inScene || e.altKey || e.metaKey || e.ctrlKey) return;
   if (e.key === 'ArrowLeft') step(rotation, -1);
   else if (e.key === 'ArrowRight') step(rotation, 1);
+  else if (e.key === 'Home' && document.activeElement === track) goTo(rotation, 0);
+  else if (e.key === 'End' && document.activeElement === track) goTo(rotation, 2);
   else if (e.key === 'Enter' && document.activeElement === canvas) location.assign(scenes[activeIndex(rotation)].href);
   else return;
   e.preventDefault();
@@ -219,7 +244,7 @@ addEventListener('wheel', (e) => {
   const canScroll = delta > 0 ? scrollY + innerHeight < page.scrollHeight - 1 : scrollY > 0;
   if (canScroll && delta === e.deltaY) return;
   e.preventDefault();
-  if (drag) return;
+  if (drag || scrubbing) return;
   const pixels = delta * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1);
   const direction = wheel.push(pixels, e.timeStamp);
   if (direction) step(rotation, direction);

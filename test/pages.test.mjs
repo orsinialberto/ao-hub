@@ -31,7 +31,7 @@ test('scene data for the script follows scene order and starts hidden', () => {
     const data = JSON.parse(p.html.match(/<script type="application\/json" id="scenes">([\s\S]*?)<\/script>/)[1]);
     assert.deepEqual(data.map((s) => s.key), SCENES);
     for (const s of data) assert.equal(s.href, links(p.lang)[s.key]);
-    for (const id of ['prev', 'next', 'dots']) assert.match(p.html, new RegExp(`id="${id}"[^>]*\\shidden`));
+    assert.match(p.html, /id="turner"[^>]*\shidden/);
   }
 });
 
@@ -42,4 +42,15 @@ test('404 is bilingual', () => {
 
 test('the only visible doors are the buttons on top', () => {
   for (const p of pages.slice(0, 2)) assert.doesNotMatch(p.html, /id="enter"/);
+});
+
+test('turning controls are a slider line with a hint and two arrows, no dots', () => {
+  for (const [p, hint] of [[pages[0], 'Trascina per girare'], [pages[1], 'Drag to turn']]) {
+    const turner = p.html.match(/<div id="turner"[\s\S]*?<\/footer>/)[0];
+    assert.match(turner, /id="track"[^>]*role="slider"[^>]*tabindex="0"/);
+    assert.match(turner, /id="thumb"/);
+    assert.ok(turner.includes(hint));
+    assert.ok(turner.indexOf('id="prev"') < turner.indexOf('id="next"'));
+    assert.doesNotMatch(p.html, /id="dots"/);
+  }
 });

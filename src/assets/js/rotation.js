@@ -42,6 +42,28 @@ export function tick(s, dt, reduced) {
   if (Math.abs(s.target - s.pos) < 0.001) s.pos = s.target;
 }
 
+/** Posizione del cursore sulla linea (0–1). Dall'ultimo momento al primo torna indietro senza salti. */
+export function trackFraction(pos) {
+  const m = mod(pos);
+  return m <= COUNT - 1 ? m / (COUNT - 1) : COUNT - m;
+}
+
+/** Trascinamento del cursore sulla linea: può attraversare tutti i momenti. */
+export function scrubStart(s) {
+  s.dragging = true;
+  s.scrubBase = Math.floor(Math.round(s.pos) / COUNT) * COUNT;
+}
+
+export function scrubTo(s, fraction) {
+  if (s.dragging) s.pos = s.scrubBase + clamp(fraction, 0, 1) * (COUNT - 1);
+}
+
+export function scrubEnd(s) {
+  if (!s.dragging) return;
+  s.dragging = false;
+  s.target = Math.round(s.pos) || 0;
+}
+
 export const activeIndex = (s) => mod(Math.round(s.pos));
 
 export const figureVisibility = (s) => 1 - smoothstep(0.15, 0.45, Math.abs(s.pos - Math.round(s.pos)));

@@ -5,7 +5,6 @@ import { FIGURES, figureSize } from './figures.js';
 import { fitView } from './ui-state.js';
 
 const PITCH = 0.38;
-const PAPER = [250 / 255, 248 / 255, 242 / 255];
 const ROWS = [0, 0.2, 0.4, 0.58, 0.73, 0.85, 0.94, 1];
 const STRIP = new Float32Array(ROWS.flatMap((t) => [-1, t, 1, t]));
 const FLOWER_QUAD = new Float32Array([-1, 0, 1, 0, -1, 1, 1, 1]);
@@ -13,7 +12,7 @@ const SQUARE = new Float32Array([-1, -1, -1, 1, 1, -1, 1, 1]);
 const UNIT = new Float32Array([0, 0, 0, 1, 1, 0, 1, 1]);
 
 export function createScene(canvas, { bladeCount, figureUrls }) {
-  const gl = canvas.getContext('webgl2', { antialias: true, alpha: false });
+  const gl = canvas.getContext('webgl2', { antialias: true, alpha: true }); // il cielo è dietro, in CSS
   if (!gl) throw new Error('WebGL2 non disponibile');
 
   function program(vs, fs) {
@@ -159,7 +158,7 @@ export function createScene(canvas, { bladeCount, figureUrls }) {
     };
 
     gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(...PAPER, 1);
+    gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST);
 
@@ -190,9 +189,11 @@ export function createScene(canvas, { bladeCount, figureUrls }) {
       gl.uniform4f(figureProgram.u.uRect, p.left, p.right, p.top, p.bottom);
       gl.bindTexture(gl.TEXTURE_2D, figures[figure].texture);
       gl.bindVertexArray(figureMesh.vao);
-      gl.enable(gl.SAMPLE_ALPHA_TO_COVERAGE);
+      // disegnata per ultima con alfa premoltiplicata: bordi puliti anche sopra il cielo
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      gl.disable(gl.SAMPLE_ALPHA_TO_COVERAGE);
+      gl.disable(gl.BLEND);
       if (visibility === 1) rect = screenRect(p);
     }
   }

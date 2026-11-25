@@ -113,5 +113,5 @@ void main(){
   vec4 c = texture(uTex, vUv);      // alfa premoltiplicata
   float a = clamp((c.a - 0.5) / max(fwidth(c.a), 0.001) + 0.5, 0.0, 1.0);
   if (a <= 0.0) discard;
-  o = vec4(c.rgb / max(c.a, 0.001), a);
+  o = vec4(c.rgb / max(c.a, 0.001) * a, a);
 }`;

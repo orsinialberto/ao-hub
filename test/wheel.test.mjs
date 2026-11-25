@@ -32,3 +32,32 @@ test('tiny jitter does nothing, and does not add up over time', () => {
 test('zero delta is ignored', () => {
   assert.deepEqual(feed([[0, 0]]), []);
 });
+
+// casi dell'uso vero: il secondo gesto non deve andare perso
+const inertia = (from, count, start) => series(Array.from({ length: count }, (_, i) => Math.max(2, Math.round(from * 0.95 ** i))), start);
+
+test('a second swipe 300 ms after the first counts, even if not much stronger than the tail', () => {
+  const first = [...series([10, 35, 60]), ...inertia(60, 15, 48)];
+  const second = series([34, 48, 56, 40, 30], first.at(-1)[1] + 16);
+  assert.deepEqual(feed([...first, ...second]), [1, 1]);
+});
+test('mouse notches in quick succession keep turning', () => {
+  assert.deepEqual(feed([[100, 0], [100, 280]]), [1, 1]);
+  const spinning = Array.from({ length: 8 }, (_, i) => [100, i * 120]); // 8 scatti in 0,84 s
+  assert.ok(feed(spinning).length >= 3, String(feed(spinning).length));
+});
+test('uneven inertia is still one swipe', () => {
+  const noisy = Array.from({ length: 90 }, (_, i) => Math.max(1, Math.round(70 * 0.95 ** i) + [0, 3, -3, 2, -2][i % 5]));
+  assert.deepEqual(feed(series([8, 25, 55, 70, ...noisy])), [1]);
+});
+test('a long slow push that keeps accelerating is one swipe', () => {
+  assert.deepEqual(feed(series(Array.from({ length: 30 }, (_, i) => 3 + i * 3))), [1]);
+});
+test('two events of the same flick a few ms apart are one step', () => {
+  assert.deepEqual(feed([[100, 0], [100, 16], [100, 32]]), [1]);
+});
+test('a fading swipe delivered slowly (busy page) is still one swipe', () => {
+  // sequenza registrata nel browser: un evento ogni 66 ms circa
+  const slow = series(Array.from({ length: 40 }, (_, i) => Math.max(2, 60 - i * 2)), 0, 66);
+  assert.deepEqual(feed(slow), [1]);
+});

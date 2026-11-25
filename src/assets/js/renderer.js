@@ -11,7 +11,7 @@ const FLOWER_QUAD = new Float32Array([-1, 0, 1, 0, -1, 1, 1, 1]);
 const SQUARE = new Float32Array([-1, -1, -1, 1, 1, -1, 1, 1]);
 const UNIT = new Float32Array([0, 0, 0, 1, 1, 0, 1, 1]);
 
-export function createScene(canvas, { reduced = false, bladeCount, figureUrls }) {
+export function createScene(canvas, { bladeCount, figureUrls }) {
   const gl = canvas.getContext('webgl2', { antialias: true, alpha: false });
   if (!gl) throw new Error('WebGL2 non disponibile');
 
@@ -176,7 +176,7 @@ export function createScene(canvas, { reduced = false, bladeCount, figureUrls })
     gl.uniformMatrix4fv(bladeProgram.u.uVP, false, vp);
     gl.uniform3fv(bladeProgram.u.uRight, basis.right);
     gl.uniform3fv(bladeProgram.u.uUp, basis.up);
-    gl.uniform1f(bladeProgram.u.uTime, reduced ? 0 : time);
+    gl.uniform1f(bladeProgram.u.uTime, time);
     gl.uniform4fv(bladeProgram.u.uPush, wake);
     shadowUniforms(bladeProgram.u, shadow);
     for (const m of [bladeMesh, flowerMesh]) {

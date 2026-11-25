@@ -113,12 +113,11 @@ export function createScene(canvas, { bladeCount, figureUrls }) {
   }
 
   /** Rettangolo della figura in unità di mondo: base appoggiata a terra. */
-  function placement(i, visibility) {
+  function placement(i, shift) {
     const f = FIGURES[i];
     const { w, h } = figureSize(f);
     const tall = h / Math.cos(PITCH); // compensa lo scorcio della camera
-    const sink = (1 - visibility) * tall;
-    return { left: -f.anchorX * w, right: (1 - f.anchorX) * w, top: tall - sink, bottom: -sink, width: w };
+    return { left: -f.anchorX * w + shift, right: (1 - f.anchorX) * w + shift, top: tall, bottom: 0, width: w };
   }
 
   function screenRect(p) {
@@ -143,18 +142,34 @@ export function createScene(canvas, { bladeCount, figureUrls }) {
     gl.uniform2f(u.uShadowAxis, basis.right[0], basis.right[2]);
   }
 
-  function render({ yaw, time, wake, figure, visibility }) {
+  function render({ yaw, time, wake, blend }) {
     if (gl.isContextLost()) return;
-    load(figure);
+    load(blend.from);
+    load(blend.to);
     camera(yaw);
-    const p = placement(figure, visibility);
-    const ready = figures[figure].texture !== null;
-    const centre = (p.left + p.right) / 2;
+    // i due disegni del passaggio; uno non ancora caricato (o mancante) pesa zero
+    const layers = [
+      { index: blend.from, weight: blend.weightFrom, place: placement(blend.from, blend.shiftFrom) },
+      { index: blend.to, weight: blend.weightTo, place: placement(blend.to, blend.shiftTo) },
+    ].map((l) => ({ ...l, texture: figures[l.index].texture }))
+      .map((l) => (l.texture ? l : { ...l, weight: 0 }));
+    // l'ombra segue la miscela dei due
+    let centre = 0, width = 0, total = 0;
+    for (const l of layers) {
+      centre += ((l.place.left + l.place.right) / 2) * l.weight;
+      width += l.place.width * l.weight;
+      total += l.weight;
+    }
+    if (total > 0) {
+      centre /= total;
+      width /= total;
+    }
+    const presence = Math.min(total, 1);
     const shadow = {
       x: basis.right[0] * centre,
       z: basis.right[2] * centre,
-      reach: p.width * 0.42,
-      strength: ready ? 0.34 * visibility : 0,
+      reach: Math.max(width * 0.42, 0.1),
+      strength: 0.34 * presence,
     };
 
     gl.viewport(0, 0, canvas.width, canvas.height);
@@ -182,20 +197,33 @@ export function createScene(canvas, { bladeCount, figureUrls }) {
     }
 
     rect = null;
-    if (ready && visibility > 0) {
-      gl.useProgram(figureProgram.p);
-      gl.uniformMatrix4fv(figureProgram.u.uVP, false, vp);
-      gl.uniform3fv(figureProgram.u.uRight, basis.right);
-      gl.uniform4f(figureProgram.u.uRect, p.left, p.right, p.top, p.bottom);
-      gl.bindTexture(gl.TEXTURE_2D, figures[figure].texture);
-      gl.bindVertexArray(figureMesh.vao);
-      // disegnata per ultima con alfa premoltiplicata: bordi puliti anche sopra il cielo
-      gl.enable(gl.BLEND);
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      gl.disable(gl.BLEND);
-      if (visibility === 1) rect = screenRect(p);
-    }
+    if (presence <= 0) return;
+    const [from, to] = layers;
+    const sides = (l) => [l.place.left, l.place.right, l.place.top, l.place.bottom];
+    gl.useProgram(figureProgram.p);
+    gl.uniformMatrix4fv(figureProgram.u.uVP, false, vp);
+    gl.uniform3fv(figureProgram.u.uRight, basis.right);
+    gl.uniform4f(figureProgram.u.uQuad,
+      Math.min(from.place.left, to.place.left), Math.max(from.place.right, to.place.right),
+      Math.max(from.place.top, to.place.top), 0);
+    gl.uniform4fv(figureProgram.u.uRectFrom, sides(from));
+    gl.uniform4fv(figureProgram.u.uRectTo, sides(to));
+    gl.uniform2f(figureProgram.u.uWeight, from.weight, to.weight);
+    gl.uniform1i(figureProgram.u.uFrom, 0);
+    gl.uniform1i(figureProgram.u.uTo, 1);
+    // una texture mancante pesa zero: al suo posto va bene l'altra
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, to.texture ?? from.texture);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, from.texture ?? to.texture);
+    gl.bindVertexArray(figureMesh.vao);
+    // disegnata per ultima con alfa premoltiplicata: bordi puliti anche sopra il cielo
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    gl.disable(gl.BLEND);
+    // cliccabile solo da ferma
+    if (blend.from === blend.to && from.texture) rect = screenRect(from.place);
   }
 
   /** Il punto del terreno sotto il cursore, poco sopra la terra. */

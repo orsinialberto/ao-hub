@@ -94,24 +94,37 @@ ${SHADOW}
 void main(){ vec4 c = texture(uTex, vUv); if (c.a < 0.5) discard; o = vec4(c.rgb * (1.0 - shadow(vWorld)), 1.0); }`;
 
 export const FIGURE_VS = `
-layout(location=0) in vec2 a;       // angolo del rettangolo: u, v in 0..1 (v dall'alto)
+layout(location=0) in vec2 a;       // angolo del rettangolo, 0..1
 uniform mat4 uVP;
 uniform vec3 uRight;
-uniform vec4 uRect;                 // sinistra, destra, alto, basso in unità di mondo
-out vec2 vUv; out float vHeight;
+uniform vec4 uQuad;                 // sinistra, destra, alto, basso: contiene entrambi i disegni
+out vec2 vPos;
 void main(){
-  vec3 p = uRight * mix(uRect.x, uRect.y, a.x);
-  p.y = mix(uRect.z, uRect.w, a.y);
-  vUv = a; vHeight = p.y;
+  vPos = vec2(mix(uQuad.x, uQuad.y, a.x), mix(uQuad.z, uQuad.w, a.y));
+  vec3 p = uRight * vPos.x;
+  p.y = vPos.y;
   gl_Position = uVP * vec4(p, 1.0);
 }`;
 
 export const FIGURE_FS = `
-in vec2 vUv; in float vHeight; uniform sampler2D uTex; out vec4 o;
-void main(){
-  if (vHeight < -0.001) discard;    // sotto terra mentre sprofonda
-  vec4 c = texture(uTex, vUv);      // alfa premoltiplicata
+in vec2 vPos;
+uniform sampler2D uFrom, uTo;
+uniform vec4 uRectFrom, uRectTo;    // sinistra, destra, alto, basso
+uniform vec2 uWeight;               // opacità dei due disegni
+out vec4 o;
+// colore premoltiplicato con il bordo reso netto
+vec4 drawing(sampler2D tex, vec4 r){
+  vec2 uv = vec2((vPos.x - r.x) / (r.y - r.x), (vPos.y - r.z) / (r.w - r.z));
+  vec4 c = texture(tex, uv);
   float a = clamp((c.a - 0.5) / max(fwidth(c.a), 0.001) + 0.5, 0.0, 1.0);
-  if (a <= 0.0) discard;
-  o = vec4(c.rgb / max(c.a, 0.001) * a, a);
+  vec2 inRect = step(vec2(0.0), uv) * step(uv, vec2(1.0));
+  return vec4(c.rgb / max(c.a, 0.001) * a, a) * inRect.x * inRect.y;
+}
+void main(){
+  // il disegno in arrivo sopra quello in uscita (colori premoltiplicati)
+  vec4 under = drawing(uFrom, uRectFrom) * uWeight.x;
+  vec4 over = drawing(uTo, uRectTo) * uWeight.y;
+  vec4 c = over + under * (1.0 - over.a);
+  if (c.a <= 0.003) discard;
+  o = c;
 }`;

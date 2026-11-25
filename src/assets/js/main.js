@@ -1,6 +1,6 @@
 // Collega pagina, rotazione, scia e scena. Senza di lui restano i link in HTML.
 import { createScene } from './renderer.js';
-import { createRotation, dragStart, dragBy, release, goTo, step, tick, activeIndex, figureVisibility, trackFraction, scrubStart, scrubTo, scrubEnd } from './rotation.js';
+import { createRotation, dragStart, dragBy, release, goTo, step, tick, activeIndex, figureBlend, trackFraction, scrubStart, scrubTo, scrubEnd } from './rotation.js';
 import { createWake } from './wake.js';
 import { createWheelStepper } from './wheel.js';
 import { FIGURES } from './figures.js';
@@ -102,8 +102,7 @@ function draw(ms, dt) {
     yaw: 0.35 + (rotation.pos * Math.PI * 2) / 3,
     time: calm.matches ? 0 : ms / 1000,
     wake: wake.data(),
-    figure: index,
-    visibility: figureVisibility(rotation),
+    blend: figureBlend(rotation.pos),
   });
 }
 
@@ -144,7 +143,7 @@ function endDrag(velocity = 0) {
   release(rotation, velocity);
 }
 
-const overFigure = (e) => figureVisibility(rotation) === 1 && hitRect(scene?.figureRect() ?? null, e.clientX, e.clientY);
+const overFigure = (e) => hitRect(scene?.figureRect() ?? null, e.clientX, e.clientY);
 const touchPoint = (e, hold) => ({ x: e.clientX, y: e.clientY, until: performance.now() + hold });
 
 canvas.addEventListener('pointerdown', (e) => {

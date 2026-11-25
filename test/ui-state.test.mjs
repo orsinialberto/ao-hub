@@ -33,3 +33,10 @@ test('on a desktop the island keeps its approved size', () => {
   assert.ok(Math.abs(fitView(1440, 540, 1440, 900).hw - 17) < 1e-9);
   assert.ok(Math.abs(fitView(390, 540, 390, 844).hw - 7.2) < 1e-9);
 });
+
+test('spare height goes mostly above, so the meadow sits low', () => {
+  const { hh, cy } = fitView(1440, 570, 1440, 900);
+  const above = cy + hh - SCENE_TOP, below = SCENE_BOTTOM - (cy - hh);
+  assert.ok(above > below * 2.5, `above ${above} below ${below}`);
+  assert.ok(below > 0);
+});

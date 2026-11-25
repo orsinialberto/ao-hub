@@ -66,4 +66,22 @@ export function scrubEnd(s) {
 
 export const activeIndex = (s) => mod(Math.round(s.pos));
 
-export const figureVisibility = (s) => 1 - smoothstep(0.15, 0.45, Math.abs(s.pos - Math.round(s.pos)));
+const SLIDE = 0.35; // scorrimento laterale durante il passaggio, in unità di mondo
+
+/**
+ * Quali disegni mostrare a una data posizione. `to` va disegnato sopra `from`:
+ * compare mentre `from` è ancora pieno, poi `from` si dissolve sotto. La figura non sparisce mai.
+ */
+export function figureBlend(pos) {
+  const base = Math.floor(pos);
+  const t = pos - base;
+  if (t === 0) return { from: mod(base), to: mod(base), weightFrom: 1, weightTo: 0, shiftFrom: 0, shiftTo: 0 };
+  return {
+    from: mod(base),
+    to: mod(base + 1),
+    weightFrom: 1 - smoothstep(0.35, 0.85, t),
+    weightTo: smoothstep(0.15, 0.65, t),
+    shiftFrom: -t * SLIDE,
+    shiftTo: (1 - t) * SLIDE,
+  };
+}

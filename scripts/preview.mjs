@@ -3,9 +3,10 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { PREVIEW_PORT } from './lib/preview-port.mjs';
 
 const dist = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../dist');
-const port = Number(process.argv[2] || process.env.PORT || 4190);
+const port = Number(process.argv[2] || process.env.PORT || PREVIEW_PORT);
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.xml': 'application/xml', '.txt': 'text/plain', '.pdf': 'application/pdf', '.mp4': 'video/mp4' };
 
 http.createServer((req, res) => {

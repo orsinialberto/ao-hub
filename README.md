@@ -8,9 +8,9 @@ Ingresso unico ai siti di Alberto Orsini: un prato animato che gira su tre figur
 |---|---|
 | `npm test` | test della logica |
 | `npm run check` | test, build e controlli su `dist/` |
-| `npm run preview` | build e server su http://localhost:4190/ (`-- 4200` per un'altra porta) |
+| `npm run preview` | build e server su http://localhost:4200/ (`-- 4300` per un'altra porta; alcune porte, per esempio 4190, sono bloccate dai browser) |
 
-Il server di anteprima risponde anche agli altri dispositivi della rete (utile per il telefono, su `http://<IP-del-computer>:4190`): usarlo su una rete fidata e chiuderlo con `Ctrl+C`.
+Il server di anteprima risponde anche agli altri dispositivi della rete (utile per il telefono, su `http://<IP-del-computer>:4200`): usarlo su una rete fidata e chiuderlo con `Ctrl+C`.
 `?fps=1` mostra i fotogrammi al secondo, `?scene=1` o `?scene=2` apre un altro momento.
 
 ## Dove stanno le cose

@@ -44,7 +44,7 @@ ${DOOR_ORDER.map((k) => `<a data-scene="${k}" href="${url[k]}">${esc(t.doors[k])
 </header>
 <main class="stage">
 <canvas id="meadow" tabindex="0" role="group" aria-label="${esc(t.sceneLabel)}" hidden></canvas>
-<img id="poster" src="${rel}img/poster.webp" width="1440" height="900" alt="${esc(t.posterAlt)}">
+<img id="poster" src="${rel}img/poster.webp" width="1200" height="600" alt="${esc(t.posterAlt)}">
 <button id="prev" class="arrow" type="button" aria-label="${esc(t.prev)}" hidden>←</button>
 <button id="next" class="arrow" type="button" aria-label="${esc(t.next)}" hidden>→</button>
 </main>

@@ -44,5 +44,11 @@ for (const file of files.filter((f) => f.endsWith('.css'))) {
 }
 for (const f of ['index.html', 'en/index.html', '404.html', 'sitemap.xml', 'robots.txt', 'favicon.svg']) if (!fs.existsSync(path.join(dist, f))) err(f, 'file mancante');
 
+const size = (f) => (fs.existsSync(path.join(dist, f)) ? fs.statSync(path.join(dist, f)).size : null);
+for (const f of ['img/poster.webp', 'og.png', 'img/figure-gallery.webp', 'img/figure-cv.webp', 'img/figure-blog.webp']) if (size(f) === null) err(f, 'file mancante');
+if (size('img/poster.webp') > 250 * 1024) err('img/poster.webp', 'oltre 250 KB');
+const code = files.filter((f) => /\.(js|css)$/.test(f)).reduce((sum, f) => sum + fs.statSync(f).size, 0);
+if (code > 100 * 1024) err('js+css', `oltre 100 KB (${Math.round(code / 1024)} KB)`);
+
 if (errors.length) { console.error(errors.join('\n')); process.exit(1); }
 console.log('Check ok');

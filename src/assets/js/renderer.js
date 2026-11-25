@@ -2,6 +2,7 @@
 import { BLADE_VS, BLADE_FS, GROUND_VS, GROUND_FS, FIGURE_VS, FIGURE_FS } from './shaders.js';
 import { plantMeadow, groundPixels } from './meadow.js';
 import { FIGURES, figureSize } from './figures.js';
+import { fitView } from './ui-state.js';
 
 const PITCH = 0.38;
 const PAPER = [250 / 255, 248 / 255, 242 / 255];
@@ -133,10 +134,7 @@ export function createScene(canvas, { bladeCount, figureUrls }) {
     const w = canvas.clientWidth || 1, h = canvas.clientHeight || 1;
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
-    const aspect = w / h;
-    view.hw = aspect > 1 ? Math.max(17, 8.5 * aspect) : 7.2;
-    view.hh = view.hw / aspect;
-    view.cy = view.hh * 0.42;
+    Object.assign(view, fitView(w, h, innerWidth, innerHeight));
     view.width = w;
     view.height = h;
   }
@@ -217,7 +215,12 @@ export function createScene(canvas, { bladeCount, figureUrls }) {
     resize,
     render,
     toGround,
-    figureRect: () => rect,
+    /** In coordinate della finestra, come i puntatori. */
+    figureRect() {
+      if (!rect) return null;
+      const box = canvas.getBoundingClientRect();
+      return { left: rect.left + box.left, right: rect.right + box.left, top: rect.top + box.top, bottom: rect.bottom + box.top };
+    },
     preload: () => figureUrls.forEach((_, i) => load(i)),
     dispose() { disposed = true; },
   };

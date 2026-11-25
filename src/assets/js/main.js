@@ -14,6 +14,9 @@ const base = document.body.dataset.base;
 const params = new URLSearchParams(location.search);
 const calm = matchMedia('(prefers-reduced-motion: reduce)');
 
+// solo per generare immagine ferma (?shot=poster) e anteprima social (?shot=og)
+if (params.has('shot')) document.body.dataset.shot = params.get('shot');
+
 const rotation = createRotation();
 const start = Number(params.get('scene'));
 if (start === 1 || start === 2) rotation.pos = rotation.target = start;
@@ -25,6 +28,7 @@ let shown = -1;        // momento mostrato dall'interfaccia
 let announced = activeIndex(rotation);
 let drag = null;
 let pointer = null;    // { x, y, until }
+let onScreen = true;
 
 function showScene(index) {
   shown = index;
@@ -117,7 +121,7 @@ function loop(ms) {
   frameId = requestAnimationFrame(loop);
 }
 function run() {
-  if (frameId || !scene || document.hidden) return;
+  if (frameId || !scene || document.hidden || !onScreen) return;
   last = performance.now();
   frameId = requestAnimationFrame(loop);
 }
@@ -204,11 +208,16 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) { abandon(); stop(); } else run();
 });
 addEventListener('pageshow', run);
-addEventListener('resize', () => {
-  if (!scene) return;
+new ResizeObserver(() => {
+  if (!scene || canvas.hidden) return;
   scene.resize();
   draw(performance.now(), 0);
-});
+}).observe(canvas);
+// su schermi bassi la pagina scorre: fuori vista il ciclo si ferma
+new IntersectionObserver((entries) => {
+  onScreen = entries.at(-1).isIntersecting;
+  if (onScreen) run(); else stop();
+}).observe(canvas);
 calm.addEventListener('change', () => { wake = createWake(); });
 
 canvas.addEventListener('webglcontextlost', (e) => {

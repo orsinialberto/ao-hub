@@ -4,8 +4,8 @@ import { links, SCENES } from '../src/data.mjs';
 import { pages } from '../src/pages.mjs';
 
 test('links follow the language, gallery is shared', () => {
-  assert.deepEqual(links('it'), { gallery: 'https://gallery.albertorsini.it/', cv: 'https://curriculum.albertorsini.it/', blog: 'https://albertorsini.it/it/' });
-  assert.deepEqual(links('en'), { gallery: 'https://gallery.albertorsini.it/', cv: 'https://curriculum.albertorsini.it/en/', blog: 'https://albertorsini.it/en/' });
+  assert.deepEqual(links('it'), { gallery: 'https://gallery.albertorsini.it/', cv: 'https://curriculum.albertorsini.it/', blog: 'https://blog.albertorsini.it/it/' });
+  assert.deepEqual(links('en'), { gallery: 'https://gallery.albertorsini.it/', cv: 'https://curriculum.albertorsini.it/en/', blog: 'https://blog.albertorsini.it/en/' });
 });
 
 test('three pages: it, en, 404', () => {
@@ -21,7 +21,7 @@ test('doors work as plain html, in button order', () => {
     assert.equal(p.html.match(/<h1[\s>]/g).length, 1);
     assert.match(p.html, /hreflang="it"/);
     assert.match(p.html, /hreflang="en"/);
-    assert.match(p.html, /<meta name="robots" content="noindex/);
+    assert.doesNotMatch(p.html, /noindex/); // online sul dominio principale: va indicizzato
     assert.doesNotMatch(p.html, /(src|href)="\/(?!\/)/);
   }
 });
@@ -74,4 +74,10 @@ test('the title rises letter by letter but is read as one name', () => {
     assert.deepEqual(letters.map((m) => Number(m[1])), [...Array(13).keys()]);
     assert.equal(h1.replace(/<[^>]+>/g, ''), 'Alberto Orsini'); // lo spazio fra le parole resta: può andare a capo
   }
+});
+
+test('the 404 page works at any depth on the main domain', () => {
+  const html = pages[2].html;
+  assert.deepEqual([...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]), ['/favicon.svg', '/', '/en/']);
+  assert.match(html, /noindex/);
 });

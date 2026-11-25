@@ -1,11 +1,11 @@
 // Testi e indirizzi del sito.
 export const SITE_URL = 'https://albertorsini.it';
 /** Finché il sito è sull'indirizzo di prova non va indicizzato. */
-export const TRIAL = true;
+export const TRIAL = false;
 /** Usato solo dalla 404, che deve funzionare a qualunque profondità. */
-export const BASE_PATH = '/ao-hub/';
+export const BASE_PATH = '/';
 /** Unico punto da cambiare quando il blog si sposta. */
-export const BLOG_BASE = 'https://albertorsini.it';
+export const BLOG_BASE = 'https://blog.albertorsini.it';
 export const SCENES = ['gallery', 'cv', 'blog'];
 export const DOOR_ORDER = ['blog', 'cv', 'gallery'];
 

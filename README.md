@@ -28,14 +28,12 @@ Il server di anteprima risponde anche agli altri dispositivi della rete (utile p
 
 Immagine ferma (`public/img/poster.webp`, 1200×600) e anteprima social (`public/og.png`, 1200×630) sono screenshot di `?shot=poster` e `?shot=og`.
 
-## Trasloco del blog
+## Indirizzi
 
-Cambiare `BLOG_BASE` in `src/data.mjs` (e il test dei link). Il blog usa `/it/` e `/en/`: nei reindirizzamenti va escluso solo `/en/` esatto, che diventa la home inglese dell'hub.
+Il sito è su `https://albertorsini.it` (dominio impostato in Settings → Pages del repository; con il deploy da GitHub Actions non serve un file `CNAME`).
+Il blog è su `https://blog.albertorsini.it` (`BLOG_BASE` in `src/data.mjs`). I suoi vecchi indirizzi sul dominio principale (`/it/…` e le pagine sotto `/en/`, escluso `/en/` esatto che è la home inglese dell'hub) sono reindirizzati con una regola in Cloudflare.
 
 ## Pubblicazione
 
 Ogni push su `main` esegue `.github/workflows/deploy.yml` (`npm run check`, poi GitHub Pages; in Settings → Pages: Source «GitHub Actions»).
-
-Prima di pubblicare: toppe del cappello senza scritta su tutte le figure; nessuna figura deve riprendere personaggio o dettagli del disegno usato come riferimento di stile.
-
-Finché il sito è in prova (`https://orsinialberto.github.io/ao-hub/`) non viene indicizzato. Per passare al dominio principale: in `src/data.mjs` `TRIAL = false` e `BASE_PATH = '/'`, aggiungere `public/CNAME`, aggiornare il test del `noindex`.
+`TRIAL = true` in `src/data.mjs` esclude il sito dai motori di ricerca, se serve una pubblicazione di prova.

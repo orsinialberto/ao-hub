@@ -1,0 +1,36 @@
+@font-face { font-family: Fraunces; src: url('../fonts/Fraunces-var.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+:root { --paper: #faf8f2; --ink: #22251e; --soft: #4a4f42; --accent: #9a3a18; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { background: var(--paper); color: var(--ink); font: 400 1rem/1.5 system-ui, sans-serif; }
+body { margin: 0; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; overflow-x: hidden; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+.lang { position: absolute; z-index: 2; top: max(12px, env(safe-area-inset-top)); right: 16px; display: flex; gap: 2px; align-items: center; font-size: .85rem; }
+.lang a { padding: 8px; text-decoration: none; color: var(--soft); }
+.lang a[aria-current] { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+
+.intro { position: relative; z-index: 1; padding: clamp(52px, 7vh, 80px) 16px 0; text-align: center; pointer-events: none; }
+.intro h1 { margin: 0; font: 340 clamp(2.4rem, 6.5vw, 5rem)/1.02 Fraunces, Georgia, serif; letter-spacing: -.025em; }
+.intro p { margin: .6rem 0 0; color: var(--soft); }
+#doors { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 1.2rem; }
+#doors a, #enter { pointer-events: auto; min-height: 44px; display: inline-flex; align-items: center; padding: 0 20px; border: 1px solid #22251e40; border-radius: 8px; background: #faf8f2d9; text-decoration: none; }
+#doors a:hover, #doors a[aria-current] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+.stage { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 240px; }
+#poster { display: block; width: 100%; max-width: 960px; height: auto; }
+#meadow { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: pan-y; cursor: grab; }
+#meadow:active { cursor: grabbing; }
+#meadow:focus-visible { outline-offset: -6px; }
+.arrow { position: fixed; z-index: 1; top: 62%; width: 48px; height: 48px; border: 1px solid #22251e40; border-radius: 50%; background: #faf8f2d9; color: inherit; font-size: 1.25rem; cursor: pointer; }
+#prev { left: 16px; }
+#next { right: 16px; }
+
+.controls { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 16px max(14px, env(safe-area-inset-bottom)); pointer-events: none; }
+#enter { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+#dots { display: flex; pointer-events: auto; }
+#dots button { width: 36px; height: 36px; padding: 0; border: 0; background: none; cursor: pointer; }
+#dots button::before { content: ''; display: block; width: 10px; height: 10px; margin: auto; border-radius: 50%; border: 1.5px solid var(--ink); }
+#dots button[aria-current]::before { background: var(--ink); }

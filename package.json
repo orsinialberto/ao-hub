@@ -1,0 +1,13 @@
+{
+  "name": "ao-hub",
+  "private": true,
+  "type": "module",
+  "description": "Hub dei siti di Alberto Orsini",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\"",
+    "build": "node scripts/build.mjs",
+    "check": "npm test && node scripts/build.mjs && node scripts/check.mjs",
+    "preview": "node scripts/build.mjs && node scripts/preview.mjs"
+  }
+}

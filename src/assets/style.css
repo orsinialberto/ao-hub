@@ -14,6 +14,15 @@ a { color: inherit; }
 
 .intro { position: relative; z-index: 1; padding: clamp(60px, 7vh, 80px) 16px 0; text-align: center; pointer-events: none; }
 .intro h1 { margin: 0; font: 340 clamp(2.4rem, 6.5vw, 5rem)/1.02 Fraunces, Georgia, serif; letter-spacing: -.025em; }
+/* il titolo spunta come l'erba: ogni lettera sale da sotto il bordo della sua parola, una volta sola */
+.word { display: inline-block; white-space: nowrap; padding: .14em .06em .03em; margin: -.14em -.06em -.03em; clip-path: inset(0); }
+.letter { display: inline-block; animation: rise 500ms cubic-bezier(0.23, 1, 0.32, 1) both; animation-delay: calc(var(--i) * 35ms); }
+@keyframes rise { from { transform: translateY(115%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes appear { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .letter { animation: appear 300ms ease both; }
+}
+
 .intro p { margin: .85rem 0 0; color: var(--soft); }
 #doors { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 1.5rem; }
 #doors a { pointer-events: auto; min-height: 44px; display: inline-flex; align-items: center; padding: 0 20px; border: 1px solid #22251e40; border-radius: 8px; background: #faf8f2d9; text-decoration: none; }

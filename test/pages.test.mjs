@@ -62,3 +62,16 @@ test('before the first paint the page knows a script is coming, and can give up'
     assert.match(p.html, /classList\.remove\('boot'\)/);
   }
 });
+
+test('the title rises letter by letter but is read as one name', () => {
+  for (const p of pages.slice(0, 2)) {
+    const h1 = p.html.match(/<h1[^>]*>[\s\S]*?<\/h1>/)[0];
+    assert.match(h1, /<h1 aria-label="Alberto Orsini">/);
+    const words = h1.split('<span class="word" aria-hidden="true">').slice(1);
+    assert.equal(words.length, 2);
+    const letters = [...h1.matchAll(/<span class="letter" style="--i:(\d+)">(.)<\/span>/g)];
+    assert.equal(letters.map((m) => m[2]).join(''), 'AlbertoOrsini');
+    assert.deepEqual(letters.map((m) => Number(m[1])), [...Array(13).keys()]);
+    assert.equal(h1.replace(/<[^>]+>/g, ''), 'Alberto Orsini'); // lo spazio fra le parole resta: può andare a capo
+  }
+});

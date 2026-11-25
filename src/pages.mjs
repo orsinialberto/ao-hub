@@ -22,6 +22,14 @@ ${TRIAL ? '<meta name="robots" content="noindex">\n' : ''}<link rel="canonical" 
 <meta property="og:image" content="${SITE_URL}/og.png">
 <meta name="theme-color" content="#e3edf4">`;
 
+/** Titolo diviso in lettere per l'animazione; chi usa un lettore di schermo sente il nome intero. */
+function risingTitle(text) {
+  let i = 0;
+  const words = text.split(' ').map((word) => `<span class="word" aria-hidden="true">${[...word]
+    .map((letter) => `<span class="letter" style="--i:${i++}">${esc(letter)}</span>`).join('')}</span>`);
+  return `<h1 aria-label="${esc(text)}">${words.join(' ')}</h1>`;
+}
+
 function home(lang, path) {
   const t = copy[lang];
   const rel = lang === 'en' ? '../' : '';
@@ -41,7 +49,7 @@ ${BOOT}
 <body data-lang="${lang}" data-base="${rel}">
 <nav class="lang" aria-label="${esc(t.languageLabel)}">${langLink('it', lang === 'it' ? './' : '../')}<span aria-hidden="true">/</span>${langLink('en', lang === 'en' ? './' : 'en/')}</nav>
 <header class="intro">
-<h1>${esc(t.title)}</h1>
+${risingTitle(t.title)}
 <p>${esc(t.tagline)}</p>
 <nav id="doors" aria-label="${esc(t.doorsLabel)}">
 ${DOOR_ORDER.map((k) => `<a data-scene="${k}" href="${url[k]}">${esc(t.doors[k])}</a>`).join('\n')}

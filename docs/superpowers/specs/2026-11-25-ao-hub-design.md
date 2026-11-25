@@ -21,7 +21,7 @@ Riferimento per il carattere: la home di https://www.theboringblog.ai. Il person
 
 - Modificare l'aspetto di blog, curriculum o galleria.
 - Altre pagine o contenuti oltre alla home e a una pagina 404.
-- Passaggio giorno/notte e titolo che si scrive e si corregge, presenti nel riferimento.
+- Passaggio giorno/notte e titolo che si scrive e si corregge, presenti nel riferimento. (Il titolo ha invece un'entrata nostra, chiesta da Alberto dopo la prima prova: le lettere spuntano dal basso, una volta sola, in meno di un secondo; con «riduci movimento» solo dissolvenza.)
 - Tracciamento, statistiche e quindi banner cookie. Contatti e link social.
 
 ## Sarebbe un fallimento se

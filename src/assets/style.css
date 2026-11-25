@@ -14,8 +14,8 @@ a { color: inherit; }
 
 .intro { position: relative; z-index: 1; padding: clamp(60px, 7vh, 80px) 16px 0; text-align: center; pointer-events: none; }
 .intro h1 { margin: 0; font: 340 clamp(2.4rem, 6.5vw, 5rem)/1.02 Fraunces, Georgia, serif; letter-spacing: -.025em; }
-.intro p { margin: .6rem 0 0; color: var(--soft); }
-#doors { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 1.2rem; }
+.intro p { margin: 1.1rem 0 0; color: var(--soft); }
+#doors { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 1.9rem; }
 #doors a { pointer-events: auto; min-height: 44px; display: inline-flex; align-items: center; padding: 0 20px; border: 1px solid #22251e40; border-radius: 8px; background: #faf8f2d9; text-decoration: none; }
 #doors a:hover, #doors a[aria-current] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 
@@ -42,8 +42,8 @@ a { color: inherit; }
 @media (max-height: 520px) and (min-width: 560px) {
   .intro { padding-top: 12px; }
   .intro h1 { font-size: 2rem; }
-  .intro p { margin-top: .2rem; font-size: .9rem; }
-  #doors { margin-top: .6rem; }
+  .intro p { margin-top: .35rem; font-size: .9rem; }
+  #doors { margin-top: .8rem; }
   .stage { min-height: 170px; }
   .arrow { height: 36px; }
 }

@@ -54,3 +54,8 @@ body[data-shot] .lang, body[data-shot] .controls, body[data-shot] .arrow, body[d
 body[data-shot="og"] .intro { padding-top: 36px; }
 body[data-shot] .stage { min-height: 0; }
 body[data-shot="poster"], html:has(body[data-shot="poster"]) { background: none; }
+
+/* in attesa dello script: niente lampo delle tre porte né dell'immagine ferma, e nessun salto di altezza */
+.boot #doors a:not([data-scene="gallery"]) { display: none; }
+.boot #poster { visibility: hidden; }
+.boot .controls { min-height: calc(68px + max(10px, env(safe-area-inset-bottom))); }

@@ -54,3 +54,11 @@ test('turning controls are a slider line with a hint and two arrows, no dots', (
     assert.doesNotMatch(p.html, /id="dots"/);
   }
 });
+
+test('before the first paint the page knows a script is coming, and can give up', () => {
+  for (const p of pages.slice(0, 2)) {
+    const boot = p.html.indexOf("classList.add('boot')");
+    assert.ok(boot > 0 && boot < p.html.indexOf('rel="stylesheet"') && boot < p.html.indexOf('type="module"'));
+    assert.match(p.html, /classList\.remove\('boot'\)/);
+  }
+});

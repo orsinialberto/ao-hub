@@ -1,6 +1,10 @@
 // HTML delle pagine. Percorsi relativi: il sito di prova vive in una sottocartella.
 import { SITE_URL, TRIAL, BASE_PATH, SCENES, DOOR_ORDER, links, copy } from './data.mjs';
 
+// Eseguito prima del primo disegno: con JavaScript la pagina nasce già con una sola porta.
+// Se lo script non arriva (errore di caricamento o di esecuzione, o troppa attesa) tornano porte e immagine ferma.
+const BOOT = `<script>(function(d){var h=d.documentElement;h.classList.add('boot');function giveUp(){h.classList.remove('boot')}addEventListener('error',function(e){if(e.target===window||e.target.tagName==='SCRIPT')giveUp()},true);setTimeout(giveUp,8000)})(document)</script>`;
+
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 
 const head = (lang, path, t) => `<meta charset="utf-8">
@@ -30,6 +34,7 @@ function home(lang, path) {
 ${head(lang, path, t)}
 <link rel="icon" href="${rel}favicon.svg" type="image/svg+xml">
 <link rel="preload" href="${rel}fonts/Fraunces-var.woff2" as="font" type="font/woff2" crossorigin>
+${BOOT}
 <link rel="stylesheet" href="${rel}css/style.css">
 <script type="module" src="${rel}js/main.js"></script>
 </head>

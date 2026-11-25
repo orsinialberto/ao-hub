@@ -48,8 +48,12 @@ function setControls(visible) {
   $('turner').hidden = !visible;
 }
 
+/** Da qui in poi decide lo script cosa si vede. */
+const booted = () => document.documentElement.classList.remove('boot');
+
 /** Ripiego: immagine ferma e link. */
 function showPoster() {
+  booted();
   stop();
   abandon(); // un trascinamento in corso va chiuso, o la rotazione resta a meta
   scene = null;
@@ -80,6 +84,7 @@ function startScene() {
   poster.hidden = true;
   setControls(true);
   showScene(activeIndex(rotation));
+  booted();
   draw(performance.now(), 0);
   scene.preload();
   run();

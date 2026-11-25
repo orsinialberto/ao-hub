@@ -46,8 +46,8 @@ function setControls(visible) {
 /** Ripiego: immagine ferma e link. */
 function showPoster() {
   stop();
+  abandon(); // un trascinamento in corso va chiuso, o la rotazione resta a meta
   scene = null;
-  drag = null;
   canvas.hidden = true;
   poster.hidden = false;
   setControls(false);

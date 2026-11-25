@@ -1,7 +1,7 @@
 // Misure delle figure, prese sui file in public/img.
 // anchorX/Y: punto di appoggio a terra sotto il corpo (0–1 dall'alto a sinistra).
 // headPx: dalla cima del cappello al mento; serve a dare a tutte la stessa scala.
-export const HEAD_WORLD = 0.95;
+export const HEAD_WORLD = 1.45;
 
 export const FIGURES = [
   { key: 'gallery', file: 'figure-gallery.webp', width: 565, height: 900, anchorX: 0.5, anchorY: 0.95, headPx: 235 },

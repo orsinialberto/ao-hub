@@ -29,7 +29,7 @@ for (const file of files.filter((f) => f.endsWith('.html'))) {
   if (!/<html lang="(it|en)"/.test(h)) err(rel, 'manca lang');
   for (const [img] of h.matchAll(/<img\b[^>]*>/g)) if (!/\balt="/.test(img) || !/\bwidth="/.test(img) || !/\bheight="/.test(img)) err(rel, 'img senza alt/width/height');
   for (const m of h.matchAll(/<(?:script|img|source|iframe)\b[^>]*\ssrc="(https?:|\/\/)[^"]*"/g)) err(rel, `risorsa esterna ${m[0]}`);
-  for (const m of h.matchAll(/<link\b[^>]*rel="(?:stylesheet|preload|preconnect|icon)"[^>]*href="(https?:|\/\/)[^"]*"/g)) err(rel, `risorsa esterna ${m[0]}`);
+  for (const m of h.matchAll(/<link\b[^>]*rel="(?:stylesheet|preload|preconnect|icon|apple-touch-icon)"[^>]*href="(https?:|\/\/)[^"]*"/g)) err(rel, `risorsa esterna ${m[0]}`);
   for (const [, u] of h.matchAll(/\s(?:href|src)="([^"]+)"/g)) {
     if (/^(https?:|mailto:|data:|\/\/|#)/.test(u)) continue;
     if (!exists(path.dirname(file), u)) err(rel, `risorsa/link rotto ${u}`);
@@ -42,7 +42,7 @@ for (const file of files.filter((f) => f.endsWith('.css'))) {
     else if (!u.startsWith('data:') && !exists(path.dirname(file), u)) err(path.relative(dist, file), `risorsa rotta ${u}`);
   }
 }
-for (const f of ['index.html', 'en/index.html', '404.html', 'sitemap.xml', 'robots.txt', 'favicon.svg']) if (!fs.existsSync(path.join(dist, f))) err(f, 'file mancante');
+for (const f of ['index.html', 'en/index.html', '404.html', 'sitemap.xml', 'robots.txt', 'favicon.svg', 'apple-touch-icon.png']) if (!fs.existsSync(path.join(dist, f))) err(f, 'file mancante');
 
 const size = (f) => (fs.existsSync(path.join(dist, f)) ? fs.statSync(path.join(dist, f)).size : null);
 for (const f of ['img/poster.webp', 'og.png', 'img/figure-gallery.webp', 'img/figure-cv.webp', 'img/figure-blog.webp']) if (size(f) === null) err(f, 'file mancante');

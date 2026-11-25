@@ -81,3 +81,10 @@ test('the 404 page works at any depth on the main domain', () => {
   assert.deepEqual([...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]), ['/favicon.svg', '/', '/en/']);
   assert.match(html, /noindex/);
 });
+
+test('both home pages declare the tab icon and the home-screen icon', () => {
+  for (const [p, rel] of [[pages[0], ''], [pages[1], '../']]) {
+    assert.ok(p.html.includes(`<link rel="icon" href="${rel}favicon.svg" type="image/svg+xml">`));
+    assert.ok(p.html.includes(`<link rel="apple-touch-icon" href="${rel}apple-touch-icon.png">`));
+  }
+});

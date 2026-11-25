@@ -41,6 +41,7 @@ function home(lang, path) {
 <head>
 ${head(lang, path, t)}
 <link rel="icon" href="${rel}favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="${rel}apple-touch-icon.png">
 <link rel="preload" href="${rel}fonts/Fraunces-var.woff2" as="font" type="font/woff2" crossorigin>
 ${BOOT}
 <link rel="stylesheet" href="${rel}css/style.css">

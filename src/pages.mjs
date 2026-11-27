@@ -53,7 +53,7 @@ ${BOOT}
 ${risingTitle(t.title)}
 <p>${esc(t.tagline)}</p>
 <nav id="doors" aria-label="${esc(t.doorsLabel)}">
-${DOOR_ORDER.map((k) => `<a data-scene="${k}" href="${url[k]}">${esc(t.doors[k])}</a>`).join('\n')}
+${DOOR_ORDER.map((k) => `<a class="button-02" data-scene="${k}" href="${url[k]}"><span class="inner">${esc(t.doors[k])}</span><span class="circle" aria-hidden="true"><span>→</span></span></a>`).join('\n')}
 </nav>
 </header>
 <main class="stage">

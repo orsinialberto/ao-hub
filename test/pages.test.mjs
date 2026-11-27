@@ -16,7 +16,7 @@ test('doors work as plain html, in button order', () => {
   for (const p of pages.slice(0, 2)) {
     const nav = p.html.match(/<nav id="doors"[\s\S]*?<\/nav>/)[0];
     assert.deepEqual([...nav.matchAll(/data-scene="(\w+)"/g)].map((m) => m[1]), ['blog', 'cv', 'gallery']);
-    assert.doesNotMatch(nav, /target=|hidden/);
+    assert.doesNotMatch(nav, /target=|\shidden/);
     for (const url of Object.values(links(p.lang))) assert.ok(nav.includes(`href="${url}"`), url);
     assert.equal(p.html.match(/<h1[\s>]/g).length, 1);
     assert.match(p.html, /hreflang="it"/);

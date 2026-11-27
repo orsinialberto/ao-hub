@@ -13,7 +13,7 @@ a { color: inherit; }
 .lang a[aria-current] { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
 
 .intro { position: relative; z-index: 1; padding: clamp(60px, 7vh, 80px) 16px 0; text-align: center; pointer-events: none; }
-.intro h1 { margin: 0; font: 340 clamp(2.4rem, 6.5vw, 5rem)/1.02 Fraunces, Georgia, serif; letter-spacing: -.025em; }
+.intro h1 { width: fit-content; margin: 0 auto; pointer-events: auto; font: 340 clamp(2.4rem, 6.5vw, 5rem)/1.02 Fraunces, Georgia, serif; letter-spacing: -.025em; }
 /* il titolo spunta come l'erba: ogni lettera sale da sotto il bordo della sua parola, una volta sola */
 .word { display: inline-block; white-space: nowrap; padding: .14em .06em .03em; margin: -.14em -.06em -.03em; clip-path: inset(0); }
 .letter { display: inline-block; animation: rise 500ms cubic-bezier(0.23, 1, 0.32, 1) both; animation-delay: calc(var(--i) * 35ms); }

@@ -4,6 +4,7 @@ import { createRotation, dragStart, dragBy, release, goTo, step, tick, activeInd
 import { createWake } from './wake.js';
 import { createWheelStepper } from './wheel.js';
 import { FIGURES } from './figures.js';
+import { followPointer } from './title-weight.js';
 import { DRAG_THRESHOLD, isClick, hitRect, bladeCountFor } from './ui-state.js';
 
 const $ = (id) => document.getElementById(id);
@@ -275,5 +276,7 @@ canvas.addEventListener('webglcontextlost', (e) => {
   showPoster();
 });
 canvas.addEventListener('webglcontextrestored', startScene);
+
+followPointer(document.querySelector('.intro h1'), calm);
 
 startScene();
